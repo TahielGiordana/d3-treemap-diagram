@@ -146,7 +146,7 @@ function createTreemapDiagram(data) {
     .data(tileColors)
     .enter()
     .append("rect")
-    .attr("id", "legend-item")
+    .attr("class", "legend-item")
     .attr("width", 40)
     .attr("height", 20)
     .attr("x", (d, i) => legendPadding + i * 40)
