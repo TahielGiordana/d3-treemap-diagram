@@ -41,6 +41,7 @@ function createTreemapDiagram(data) {
     "#43a740",
     "#6f806f",
   ];
+
   //Create the tiles to the svg
   svg
     .selectAll("rect")
@@ -121,4 +122,43 @@ function createTreemapDiagram(data) {
     .text((d) => d.text)
     .attr("font-size", ".6rem")
     .attr("fill", "white");
+
+  //Add a legend
+  let legendWidth = tileColors.length * 40;
+  let legendPadding = 20;
+
+  const legend = d3
+    .select("body")
+    .append("svg")
+    .attr("id", "legend")
+    .attr("width", legendWidth + 2 * legendPadding)
+    .attr("height", 40);
+
+  const categories = data.children.map((d) => d.name);
+  categories.push("Others");
+
+  const legendScale = d3.scaleLinear();
+  legendScale.domain([0, tileColors.length - 1]); // Show all the color options
+  legendScale.range([20, legendWidth - 20]); // Center the console label with the rect
+
+  legend
+    .selectAll("legend-item")
+    .data(tileColors)
+    .enter()
+    .append("rect")
+    .attr("id", "legend-item")
+    .attr("width", 40)
+    .attr("height", 20)
+    .attr("x", (d, i) => legendPadding + i * 40)
+    .attr("y", 0)
+    .attr("fill", (d, i) => tileColors[i]);
+
+  const legendAxis = d3.axisBottom(legendScale);
+  legendAxis.ticks(18);
+  legendAxis.tickFormat((d, i) => categories[i]);
+
+  legend
+    .append("g")
+    .call(legendAxis)
+    .attr("transform", "translate(" + legendPadding + "," + 20 + ")");
 }
