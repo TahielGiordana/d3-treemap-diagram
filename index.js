@@ -57,6 +57,18 @@ function createTreemapDiagram(data) {
     .attr("width", (d) => d.x1 - d.x0)
     .attr("height", (d) => d.y1 - d.y0)
     .style("stroke", "black")
+    .on("mouseover", (d) => {
+      let cell = d.target["__data__"].data;
+      tooltip
+        .style("opacity", "1")
+        .attr("data-value", cell.value)
+        .html(
+          `<p>Name: ${cell.name}</br>Category: ${cell.category}</br>Value: ${cell.value}`
+        );
+    })
+    .on("mouseout", () => {
+      tooltip.style("opacity", "0").attr("data-value", "cell.value").html("");
+    })
     .attr("fill", (d) => {
       switch (d.data.category) {
         case "2600":
@@ -108,6 +120,7 @@ function createTreemapDiagram(data) {
     .selectAll("tspan")
     .data((d) => {
       return d.data.name.split(/(?=[A-Z][^A-Z])/g).map((v) => {
+        //Splits the strings to not overflow the cells
         return {
           text: v,
           x0: d.x0,
@@ -161,4 +174,7 @@ function createTreemapDiagram(data) {
     .append("g")
     .call(legendAxis)
     .attr("transform", "translate(" + legendPadding + "," + 20 + ")");
+
+  //Add a tooltip to show the data within the cells
+  const tooltip = d3.select("body").append("div").attr("id", "tooltip");
 }

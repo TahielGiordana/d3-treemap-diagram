@@ -11,3 +11,8 @@ body {
 #legend {
   margin-top: 1em;
 }
+
+#tooltip {
+  min-width: 2rem;
+  min-height: 8rem;
+}
